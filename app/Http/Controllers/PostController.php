@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -19,8 +20,9 @@ class PostController extends Controller
 
     // ];
     $allPosts =Post::all();
+    $userId =  Auth::id();
     //dd($allPosts);
-    return view('posts.index',['posts'=>$allPosts]);
+    return view('posts.index',['posts'=>$allPosts , 'userId'=>$userId]);
     
    }
    ///public function show(Post $post) //Post::findOrFail()
@@ -35,7 +37,8 @@ class PostController extends Controller
    public function create()
    {
      
-     return view('posts.create',['users'=>User::all()]);
+     //return view('posts.create',['users'=>User::all()]);
+     return view('posts.create');
    }
  //  public function store()
  //  public function store(Request $request)
@@ -58,18 +61,23 @@ class PostController extends Controller
      //$requestedData = request()->all();
      //dd($requestedData);
      
-     $requestedData = $request->all();
-    //  Post::create([
+    
+    // $requestedData = $request->all();
+   //  Post::create($requestedData);
+    
+  
+  //  Post::create([
     //    'title'=> $request->title,
     //    'description'=>$request->description
     //  ]);
      //or
-     Post::create($requestedData);
+    
      //or
-    //  $post = new Post;
-    //  $post->title = $request->title;
-    //  $post->description = $request->description;
-    //  $post->save();
+     $post = new Post;
+     $post->title = $request->title;
+     $post->description = $request->description;
+     $post->user_id = Auth::id();
+     $post->save();
 
      return redirect()->route('posts.index');
     }
@@ -87,6 +95,11 @@ class PostController extends Controller
       $post->title = $request->title;
       $post->description = $request->description;
       $post->save();
+      return redirect()->route('posts.index');
+     }
+     public function destroy($postId){
+      $post = Post::find($postId);
+      $post->delete();
       return redirect()->route('posts.index');
      }
 }

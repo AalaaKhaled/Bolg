@@ -20,6 +20,7 @@
       <label for="description" class="form-label">Descreption :</label>
       <textarea name="description" class="form-control" id="description"></textarea>
     </div>
+    {{--  
     <div class="mb-3">
       <label for="post_creator">Post Creator</label>
       <select name="user_id" class="form-control" id="post_creator">
@@ -27,7 +28,7 @@
          <option value="{{ $user->id }}">{{ $user->name }}</option>
         @endforeach 
       </select>
-    </div>
+    </div>--}}
     <button type="submit" class="btn btn-success">Create Post</button>
   </form>
 @endsection

@@ -28,10 +28,16 @@
       <td>
       {{-- <a href="/posts/{{ $post['id'] }}" class="btn btn-info"style="margin-bottom:20px;">View</a> --}}
       <a href="{{ route('posts.show',['post'=>$post->id]) }}" class="btn btn-info"style="margin-bottom:20px;">View</a>
+     
+     @if ($post->user->id == $userId)
       <a href="{{ route('posts.edit',['post'=>$post->id]) }}" class="btn btn-secondary"style="margin-bottom:20px;">Edit</a>
-      <button type="button" class="btn btn-danger"style="margin-bottom:20px;">Delete</button>
-
-</td>
+      <form method="POST" action="{{ route('posts.destroy',['post'=>$post->id]) }}" style="display: inline">
+       @method('DELETE')
+       @csrf
+      <button type="submit" class="btn btn-danger" style="margin-bottom:20px;">Delete</button>
+      </form>
+      @endif
+    </td>
 
     </tr>
     @endforeach
