@@ -10,6 +10,12 @@
           <p class="card-text">{{ $post->title }}</p>
           <h5 class="card-title">Description : </h5> 
           <p class="card-text">{{ $post->description}}</p>
+          <hr>
+          <div class="tags">
+          @foreach($post->tags as $tag)
+           <span class="label label-default">{{ $tag->name }}</span>
+          @endforeach
+          </div>
         </div>
       </div>
 @endsection

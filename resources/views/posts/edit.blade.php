@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('title' , 'Edit Page')
+@section('stylesheets')
+<link href='/css/select2.min.css' rel="stylesheet" />
+@endsection
 @section('content')
 
 @if ($errors->any())
@@ -21,9 +24,29 @@
 <div class="mb-3">
   <label for="description" class="form-label">Descreption :</label>
   <textarea name="description" class="form-control" id="description">{{ $post['description'] }}</textarea>
-</div>
 
-<button type="submit" class="btn btn-success">Update Post</button>
+<label for="tags" >Tags:</label>
+<select class="form-control select2-multiple" name="tags[]" multiple="multiple">
+  @foreach ($tags as $tag)
+  <option value='{{ $tag->id }}'>{{ $tag->name }}</option>
+  @endforeach
+  
+</select>
+
+<button type="submit" class="btn btn-success" style="margin-top: 20px">Update Post</button>
 </form>
 
+@endsection
+
+@section('scripts')
+<script src="/js/select2.min.js"></script>
+<script>
+$(document).ready(function() {
+   
+    $('.select2-multiple').select2();
+   
+    $('.select2-multiple').select2().val({{ $post->tags->pluck('id') }}).trigger('change');
+
+});
+</script>
 @endsection

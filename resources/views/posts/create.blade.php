@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('title' , 'Show Page')
+@section('stylesheets')
+<link href='/css/select2.min.css' rel="stylesheet" />
+@endsection
 @section('content')
 @if ($errors->any())
     <div class = "alert alert-danger">
@@ -20,6 +23,13 @@
       <label for="description" class="form-label">Descreption :</label>
       <textarea name="description" class="form-control" id="description"></textarea>
     </div>
+    <label for="tags" >Tags:</label>
+    <select class="form-control" id="select2-multi" name="tags[]" multiple="multiple">
+      @foreach($tags as $tag)
+        <option value='{{ $tag->id }}'>{{ $tag->name }}</option>
+      @endforeach
+
+    </select>
     {{--  
     <div class="mb-3">
       <label for="post_creator">Post Creator</label>
@@ -31,4 +41,15 @@
     </div>--}}
     <button type="submit" class="btn btn-success">Create Post</button>
   </form>
+@endsection
+
+
+
+@section('scripts')
+<script src="/js/select2.min.js"></script>
+<script>
+  $(document).ready(function() {
+      $('#select2-multi').select2();
+  });
+  </script>
 @endsection

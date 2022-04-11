@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\TagController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -39,4 +40,6 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::post('/tags',[TagController::class,'store'])->name('tags.store')->middleware('auth');
+Route::get('/tags', [TagController::class,'index'])->name('tags.index')->middleware('auth');
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
+use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,7 +20,8 @@ class PostController extends Controller
     //     ['id' => 3 ,'title'=>'c' , 'posted_by'=>'ela','created_at'=>'2021-02-16'],
 
     // ];
-    $allPosts =Post::all();
+   // $allPosts =Post::all();
+    $allPosts =Post::paginate(10);
     $userId =  Auth::id();
     //dd($allPosts);
     return view('posts.index',['posts'=>$allPosts , 'userId'=>$userId]);
@@ -36,9 +38,10 @@ class PostController extends Controller
    }
    public function create()
    {
-     
+
+     $tags = Tag::all();
      //return view('posts.create',['users'=>User::all()]);
-     return view('posts.create');
+     return view('posts.create',['tags'=>$tags]);
    }
  //  public function store()
  //  public function store(Request $request)
@@ -73,20 +76,27 @@ class PostController extends Controller
      //or
     
      //or
+     
      $post = new Post;
      $post->title = $request->title;
      $post->description = $request->description;
      $post->user_id = Auth::id();
      $post->save();
 
+     $post->tags()->sync($request->tags,false);
+
      return redirect()->route('posts.index');
     }
     public function edit($postId){
     
      $post = Post::find($postId);
-
+     $tags = Tag::all();
+    //  $tags2 = array();
+    //  foreach($tags as $tag){
+    //    $tags2[$tag->id] = $tag->name;
+    //  }
     // return view('posts.edit',['post'=>$post,'users'=>User::all()]);
-    return view('posts.edit',['post'=>$post]);
+    return view('posts.edit',['post'=>$post,'tags'=>$tags]);
     }
     public function update(StorePostRequest $request,$postId){
     
@@ -95,11 +105,18 @@ class PostController extends Controller
       $post->title = $request->title;
       $post->description = $request->description;
       $post->save();
+      // if(isset($request->tags)){
+      //   $post->tags()->sync($request->tags);
+      // }else{
+      //   $post->tags()->sync(array());
+      // }
+      $post->tags()->sync($request->tags);
       return redirect()->route('posts.index');
      }
      public function destroy($postId){
       $post = Post::find($postId);
       $post->delete();
-      return redirect()->route('posts.index');
+      //return redirect()->route('posts.index');
+     return response()->json(['success'=>'Post has been deleted']);
      }
 }

@@ -10,7 +10,7 @@
 
 <table class="table">
   <thead>
-    <tr>
+    <tr >
       <th scope="col">#</th>
       <th scope="col">Title</th>
       <th scope="col">Posted By</th>
@@ -20,7 +20,7 @@
   </thead>
   <tbody>
    @foreach($posts as $post)
-    <tr>
+    <tr id="{{ $post->id }}">
       <th scope="row">{{$post->id}}</th>
       <td>{{$post->title}}</td>
       <td>{{$post->user ? $post->user->name : 'user not found'}}</td>
@@ -31,11 +31,12 @@
      
      @if ($post->user->id == $userId)
       <a href="{{ route('posts.edit',['post'=>$post->id]) }}" class="btn btn-secondary"style="margin-bottom:20px;">Edit</a>
-      <form method="POST" action="{{ route('posts.destroy',['post'=>$post->id]) }}" style="display: inline">
+     {{-- <formmethod="POST"action="route('posts.destroy',['post'=>$post->id]) \}}" style="display: inline">
        @method('DELETE')
        @csrf
       <button type="submit" class="btn btn-danger" style="margin-bottom:20px;">Delete</button>
-      </form>
+      </form>--}}
+      <a onclick="deletePost({{ $post->id }})"class="btn btn-danger" style="margin-bottom:20px;">Delete</a>
       @endif
     </td>
 
@@ -43,4 +44,27 @@
     @endforeach
   </tbody>
 </table>
+<div class="text-center">
+{{ $posts ->links("pagination::bootstrap-4") }}
+</div>
+@endsection
+@section('scripts')
+ <script>
+   function deletePost(id){
+    if(confirm("Do you realy want to delete this post ?")){
+      $.ajax(
+        {
+          url:'/posts/'+id,
+          type:'Delete',
+          data:{
+            _token :$("input[name=_token]").val()
+          },
+          success:function(response){
+           $("#"+id).remove();  
+          }
+        }
+      )
+    }
+   }
+ </script>
 @endsection
